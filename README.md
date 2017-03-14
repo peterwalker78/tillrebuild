@@ -43,29 +43,3 @@ The buildscript.sh file was created custom for this process, and is intended to 
 so that any changes to the build process can be made once, rather than having to redistribute the build CD every
 time something changes. Currently the script simply re-inserts the IP details into the clean system image
 that has just been applied, however, in future we would be able to script any other settings should we want to.
-Below is a cut n paste of the initial version of the buildscript.sh file:
-
-#!/bin/bash
-#logfile=script.log
-#exec > $logfile 2>&1
-
-mount -t msdos /dev/?da1 /mnt/hdd
-cd /mnt/hdd/adx_sdt1
-
-export OLDIP="$(grep IP /IP.TXT | awk '{print $2}')"
-export OLDROUTE="$(grep ROUTE /IP.TXT | awk '{print $2}')"
-export OLDNETMASK="$(grep NETMASK /IP.TXT | awk '{print $2}')"
-export IMAGEIP="$(grep lan0 adxipccz.bat | awk '{print $3}')"
-export IMAGEROUTE="$(grep default adxipccz.bat | awk '{print $4}')"
-export IMAGENETMASK="$(grep lan0 adxipccz.bat | awk '{print $5}')"
-
-touch adxipccz.bat
-sed -i "s=$IMAGEIP=$OLDIP=;s=$IMAGEROUTE=$OLDROUTE=;s=$IMAGENETMASK=$OLDNETMASK=" adxipccz.bat
-eject
-clear
-echo "Restore complete!"
-echo "Please remove the disc from the tray then press any key to reboot."
-read -p \$
-cd /
-umount /mnt/hdd
-shutdown -r now
